@@ -61,4 +61,6 @@ for x in year_list:
 for key, value in sorted(population_list.items(), key=lambda x:x[1]):
     print "%s - %s " %(key, value)
 
-#plt.plot(population_list)
+plt.plot(*zip(*sorted(population_list.items(), key=lambda x:x[1])))
+#plt.plot(population_list.iteritems())
+plt.show()

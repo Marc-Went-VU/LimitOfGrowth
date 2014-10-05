@@ -14,13 +14,13 @@ def get_table_value(table, lower_value, upper_value, step_size, inp):
     elif inp > upper_value:
         inp = upper_value
         
-    index = floor(inp/step_size)*step_size; #rounding is done by floor(inp*(1/step_size))/(1/step_size). For example step_size 0.1 requires rounding to one digit
+    index = floor(inp/step_size)*step_size #rounding is done by floor(inp*(1/step_size))/(1/step_size). For example step_size 0.1 requires rounding to one digit
     
     
     if index == inp:
         return table[index]
     else:
-        frac = inp - index
+        frac = (inp - index)/(step_size)
         return (1 - frac) * get_unprecise_index(table, index) + frac * get_unprecise_index(table, index+step_size)
 
 def f4(inp): #mortality0To14
@@ -119,11 +119,11 @@ def f25(inp): #lifetimeMultiplierFromHealthServicesAfter
     return get_table_value(table, 0, 100, 20, inp)
 
 def f26(inp): #fractionOfPopulationUrban
-    table = {0: 0,
-            2000000000: 0.2,
-            4000000000: 0.4,
-            6000000000: 0.5,
-            8000000000: 0.58,
+    table = {         0: 0.0,
+             2000000000: 0.2,
+             4000000000: 0.4,
+             6000000000: 0.5,
+             8000000000: 0.58,
             10000000000: 0.65,
             12000000000: 0.72,
             14000000000: 0.78,

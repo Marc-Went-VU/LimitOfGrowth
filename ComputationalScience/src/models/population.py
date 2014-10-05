@@ -31,7 +31,9 @@ class Population:
         DCFS = 4*f.f41(FIE)*f.f39(self.DIOPC)
         DTF = DCFS*f.f36(self.PLE)
         FPC = F/self.POP
-        LMC = 1 - f.f27(IOPC)*f.f26(self.POP)
+        f26 = f.f26(self.POP)
+        LMC = 1 - f.f27(IOPC)* f26
+                
         LE = 28. * f.f25(self.EHSPC) * f.f20(FPC/230) * f.f29(ppolx) * LMC
         MTF = 12*f.f34(LE)
         SOPC = so/self.POP
