@@ -40,7 +40,7 @@ class Population:
         TF = min(MTF, MTF*(1-FCE)+DTF*FCE)
         B = 0.21*self.POP*TF/30
         HSAPC = f.f21(SOPC)
-        D = self.POP/LE 
+        D = self.POP/LE if LE != 0 else 0 
         
         #RGP = (dPOP/POP)*1000 # (B-D)/POP*1000
         

@@ -1,5 +1,6 @@
 from plot import Plot
 import matplotlib.pyplot as plt
+import collections
 import func as f
 from models.capital_extended import Capital
 from models.population import Population
@@ -17,15 +18,18 @@ population  = Population(CONST.START_YEAR)
 pollution   = Pollution(CONST.START_YEAR)
 agriculture = Agriculture(CONST.START_YEAR)
 
+init_result = dict(capital.initial_result().items() + 
+                   population.initial_result().items() + 
+                   pollution.initial_result().items() + 
+                   agriculture.initial_result().items())
+results = [init_result]
+result_dict = {}
 
-results = [dict(capital.initial_result().items() + 
-               population.initial_result().items() + 
-               pollution.initial_result().items() + 
-               agriculture.initial_result().items())]
 population_list = {}
 year_list = f.drange(CONST.START_YEAR, CONST.START_YEAR+CONST.YEAR_RANGE, CONST.YEAR_STEP_SIZE)
 for x in year_list:
     last_result = results[-1]
+    result_dict[x] = last_result
     population_list[x] = last_result[CONST.RETURNS.POP]
     cap_res = capital.model(current_year = x, 
                             fioaa       = last_result[CONST.RETURNS.FIOAA],
@@ -53,4 +57,8 @@ for x in year_list:
                    arg_res.items())
     results.append(result)
 
-plt.plot(population_list)
+
+for key, value in sorted(population_list.items(), key=lambda x:x[1]):
+    print "%s - %s " %(key, value)
+
+#plt.plot(population_list)
