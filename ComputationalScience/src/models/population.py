@@ -3,8 +3,71 @@ from const import _Const
         
 CONST = _Const()
 class Population:
-    def __init__(self):
+    def __init__(self, start_year):
         self = self
+        self.start_year = start_year
+        self.POP    = CONST.INITIAL.POPI
+        self.EHSPC  = CONST.INITIAL.EHSPCI
+        self.AIOPC  = CONST.INITIAL.AIOPCI
+        self.DIOPC  = CONST.INITIAL.DIOPCI
+        self.FCFPC  = CONST.INITIAL.FCFPCI
+        self.PLE    = CONST.INITIAL.PLEI
+        
+        self.delaydDIOPC={self.start_year: CONST.INITIAL.DIOPCI}
+        self.delaydFCFPC={self.start_year: CONST.INITIAL.FCFPCI}
+        self.delaydPLE={self.start_year: CONST.INITIAL.PLEI}
+
+    def initial_result(self):
+        ret = {}
+        ret[CONST.RETURNS.POP] = CONST.INITIAL.POPI
+        return ret 
+    
+    def model(self, current_year,
+                  io, so, F, ppolx,
+                  year_step= CONST.YEAR_STEP_SIZE
+                  ):        
+        IOPC = io/self.POP
+        FIE = (IOPC - self.AIOPC)/self.AIOPC
+        DCFS = 4*f.f41(FIE)*f.f39(self.DIOPC)
+        DTF = DCFS*f.f36(self.PLE)
+        FPC = F/self.POP
+        LMC = 1 - f.f27(IOPC)*f.f26(self.POP)
+        LE = 28. * f.f25(self.EHSPC) * f.f20(FPC/230) * f.f29(ppolx) * LMC
+        MTF = 12*f.f34(LE)
+        SOPC = so/self.POP
+        FCAPC = SOPC * f.f48(MTF/DTF - 1)
+        FCE = f.f45(self.FCFPC)
+        TF = min(MTF, MTF*(1-FCE)+DTF*FCE)
+        B = 0.21*self.POP*TF/30
+        HSAPC = f.f21(SOPC)
+        D = self.POP/LE 
+        
+        #RGP = (dPOP/POP)*1000 # (B-D)/POP*1000
+        
+        dPOP = B - D
+        dEHSPC = (HSAPC - self.EHSPC)/20
+        dAIOPC = (IOPC - self.AIOPC)/3
+        
+        self.delaydDIOPC[current_year + 20/year_step] = IOPC
+        self.delaydFCFPC[current_year + 20/year_step] = FCAPC
+        self.delaydPLE[current_year + 20/year_step] = LE
+        
+        dDIOPC = f.get_unprecise_index(self.delaydDIOPC, current_year)
+        dFCFPC = f.get_unprecise_index(self.delaydFCFPC, current_year)
+        dPLE = f.get_unprecise_index(self.delaydPLE, current_year)
+        
+        self.POP += (dPOP * year_step)
+        self.EHSPC += (dEHSPC * year_step)
+        self.AIOPC += (dAIOPC * year_step)
+        self.DIOPC += (dDIOPC * year_step)
+        self.FCFPC += (dFCFPC * year_step)
+        self.PLE += (dPLE * year_step)
+        
+        ret = {}
+        ret[CONST.RETURNS.POP] = self.POP
+        return ret
+
+
     def run_model(self,
                   io,
                   so,
@@ -53,59 +116,3 @@ class Population:
                                                           delaydPLE=last_result[CONST.POPULATION.DELAYED_dPLE])
                            )
         return results
-        
-    def extended_population_model(self, current_year,
-                                  POP, EHSPC, AIOPC, DIOPC, FCFPC, PLE,
-                                  io, so, F, ppolx,
-                                  delaydDIOPC, delaydFCFPC, delaydPLE,
-                                  year_step= CONST.YEAR_STEP_SIZE
-                                  ):        
-        IOPC = io/POP
-        FIE = (IOPC - AIOPC)/AIOPC
-        DCFS = 4*f.f41(FIE)*f.f39(DIOPC)
-        DTF = DCFS*f.f36(PLE)
-        FPC = F/POP
-        LMC = 1 - f.f27(IOPC)*f.f26(POP)
-        LE = 28 * f.f25(EHSPC) * f.f20(FPC/230) * f.f29(ppolx) * LMC
-        MTF = 12*f.f34(LE)
-        SOPC = so/POP
-        FCAPC = SOPC * f.f48(MTF/DTF - 1)
-        FCE = f.f45(FCFPC)
-        TF = min(MTF, MTF*(1-FCE)+DTF*FCE)
-        B = 0.21*POP*TF/30
-        HSAPC = f.f21(SOPC)
-        D = POP/LE 
-        
-        #RGP = (dPOP/POP)*1000 # (B-D)/POP*1000
-        
-        dPOP = B - D
-        dEHSPC = (HSAPC - EHSPC)/20
-        dAIOPC = (IOPC - AIOPC)/3
-        
-        delaydDIOPC[current_year + 20/year_step] = IOPC
-        delaydFCFPC[current_year + 20/year_step] = FCAPC
-        delaydPLE[current_year + 20/year_step] = LE
-        
-        dDIOPC = f.get_unprecise_index(delaydDIOPC, current_year)
-        dFCFPC = f.get_unprecise_index(delaydFCFPC, current_year)
-        dPLE = f.get_unprecise_index(delaydPLE, current_year)
-        
-        POP += (dPOP * year_step)
-        EHSPC += (dEHSPC * year_step)
-        AIOPC += (dAIOPC * year_step)
-        DIOPC += (dDIOPC * year_step)
-        FCFPC += (dFCFPC * year_step)
-        PLE += (dPLE * year_step)
-        
-        ret = [current_year]
-        ret.insert(CONST.POPULATION.POP, POP)
-        ret.insert(CONST.POPULATION.EHSPC, EHSPC)
-        ret.insert(CONST.POPULATION.AIOPC, AIOPC)
-        ret.insert(CONST.POPULATION.DIOPC, DIOPC)
-        ret.insert(CONST.POPULATION.FCFPC, FCFPC)
-        ret.insert(CONST.POPULATION.PLE, PLE)
-        ret.insert(CONST.POPULATION.DELAYED_dDIOPC, delaydDIOPC)
-        ret.insert(CONST.POPULATION.DELAYED_dFCFPC, delaydFCFPC)
-        ret.insert(CONST.POPULATION.DELAYED_dPLE, delaydPLE)
-        return ret
-

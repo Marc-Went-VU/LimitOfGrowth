@@ -22,6 +22,9 @@ class _Initials(object):
     def EHSPCI(self): #
         return self.HSAPCI
     @constant
+    def FALMI(self): #
+        return f.f126(self.PFRI)
+    @constant
     def FCAPCI(self): #
         cuf = 1
         scor = 1
@@ -36,10 +39,14 @@ class _Initials(object):
         return self.FCAPCI
     @constant
     def FI(self): #Service Capital Initial (dollar)
-        FALM = f.f126(self.PFRI)
-        AIPH = self.AII * (1 - FALM) / self.ALI
+        AIPH = self.AII * (1 - self.FALMI) / self.ALI
         LY = self.LFERTI * f.f102(AIPH) * f.f106(self.IOI)
         return LY * self.ALI * 0.63
+    @constant
+    def FIOAAI(self): #Service Capital Initial (dollar)
+        IFPC = f.f90(self.IOI/self.POPI)
+        FPC = self.FI / self.POPI
+        return f.f94(FPC/IFPC)
     @constant
     def HSAPCI(self): #Combine formula for io from capital_simple and IOPC from population using the initial values
         return f.f21(self.SOI/self.POPI)
@@ -76,8 +83,20 @@ class _Initials(object):
     def POPI(self): #Population (persons)
         return 1.6*10**9
     @constant
+    def PPASRI(self): #Service Capital Initial (dollar)
+        return self.PPGRI
+    @constant
     def PPOLI(self): #Service Capital Initial (dollar)
         return 2.5*10**7
+    @constant
+    def PPGAOI(self): #Service Capital Initial (dollar)
+        return 0.001 * self.AII * (1 - self.FALMI)
+    @constant
+    def PPGIOI(self): #Service Capital Initial (dollar)
+        return 0.02 * self.POPI * f.f132(self.IOI / self.POPI)
+    @constant
+    def PPGRI(self): #Service Capital Initial (dollar)
+        return self.PPGIOI + self.PPGAOI
     @constant
     def PPOLXI(self): #Service Capital Initial (dollar)
         return self.PPOLI/(1.36*10**8)
@@ -90,8 +109,33 @@ class _Initials(object):
         scor = 1
         return (self.SCI * cuf/scor)
     @constant
-    def UIL(self): #Service Capital Initial (dollar)
+    def UILI(self): #Service Capital Initial (dollar)
         return 8.2*10**6
+class _Returns(object):
+    @constant
+    def AI(self):
+        return "ai"
+    @constant
+    def F(self):
+        return "f"
+    @constant
+    def FALM(self):
+        return "falm"
+    @constant
+    def FIOAA(self):
+        return "fioaa"
+    @constant
+    def IO(self):
+        return "io"
+    @constant
+    def POP(self):
+        return "pop"
+    @constant
+    def PPOLX(self):
+        return "ppolx"
+    @constant
+    def SO(self):
+        return "so"
 class _Capital(object):
     @constant
     def YEAR(self):
@@ -136,12 +180,44 @@ class _Population(object):
     @constant
     def DELAYED_dPLE(self):
         return 9
-
+class _Agriculture(object):
+    @constant
+    def YEAR(self):
+        return 0
+    @constant
+    def IO(self):
+        return 1
+    @constant
+    def POP(self):
+        return  2
+    @constant
+    def PPOLX(self):
+        return 3
+    @constant
+    def AL(self):
+        return 4
+    @constant
+    def PAL(self):
+        return 5
+    @constant
+    def UIL(self):
+        return 6
+    @constant
+    def LFERT(self):
+        return 7
+    @constant
+    def AI(self):
+        return 8
+    @constant
+    def PFR(self):
+        return 9
 class _Const(object):
     def __init__(self):
         self.capital = _Capital()
         self.population = _Population()
+        self.agriculture = _Agriculture()
         self.initial = _Initials()
+        self.returns = _Returns()
     @constant
     def START_YEAR(self):
         return 1900
@@ -158,6 +234,13 @@ class _Const(object):
     @constant
     def POPULATION(self):
         return self.population
+    @constant
+    def AGRICULTURE(self):
+        return self.agriculture
+    
+    @constant
+    def RETURNS(self):
+        return self.returns
     @constant
     def INITIAL(self):
         return self.initial

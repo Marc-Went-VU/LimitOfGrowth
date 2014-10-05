@@ -1,27 +1,56 @@
 from plot import Plot
-from models.capital_simple import Capital
+import matplotlib.pyplot as plt
+import func as f
+from models.capital_extended import Capital
 from models.population import Population
+from models.pollution import Pollution
+from models.agriculture import Agriculture
 from const import _Const
 CONST = _Const()
-Capital = Capital()
-Population = Population()
 
-result = Population.run_model(start_year=1900, 
-                     year_range=200, 
-                     year_step=0.5,
-                     io = CONST.INITIAL.IOI,
-                     so = CONST.INITIAL.SOI,
-                     F = CONST.INITIAL.FI,
-                     ppolx = CONST.INITIAL.PPOLXI
-                    )
 
-# result = Capital.run_model(start_year=1900, 
-#                             year_range=200, 
-#                             year_step=0.5, 
-#                             fioaa=0.05, 
-#                             nri=CONST.NRI, 
-#                             ici=CONST.ICI, 
-#                             sci=CONST.SCI)
-# plot = Plot(result)
-# plot.plot(subplot=True, x = CONST.CAPITAL.YEAR, y=[CONST.CAPITAL.NR, CONST.CAPITAL.IC, CONST.CAPITAL.SC])
-print result
+start_year = 1900
+year_step = 1
+
+capital     = Capital(CONST.START_YEAR)
+population  = Population(CONST.START_YEAR)
+pollution   = Pollution(CONST.START_YEAR)
+agriculture = Agriculture(CONST.START_YEAR)
+
+
+results = [dict(capital.initial_result().items() + 
+               population.initial_result().items() + 
+               pollution.initial_result().items() + 
+               agriculture.initial_result().items())]
+population_list = {}
+year_list = f.drange(CONST.START_YEAR, CONST.START_YEAR+CONST.YEAR_RANGE, CONST.YEAR_STEP_SIZE)
+for x in year_list:
+    last_result = results[-1]
+    population_list[x] = last_result[CONST.RETURNS.POP]
+    cap_res = capital.model(current_year = x, 
+                            fioaa       = last_result[CONST.RETURNS.FIOAA],
+                            pop         = last_result[CONST.RETURNS.POP])
+    
+    pop_res = population.model(current_year = x,
+                               io       = last_result[CONST.RETURNS.FIOAA],
+                               so       = last_result[CONST.RETURNS.POP],
+                               F        = last_result[CONST.RETURNS.F],
+                               ppolx    = last_result[CONST.RETURNS.PPOLX])
+    
+    pol_res = pollution.model(current_year = x,
+                              io        = last_result[CONST.RETURNS.IO],
+                              pop       = last_result[CONST.RETURNS.POP],
+                              falm      = last_result[CONST.RETURNS.FALM],
+                              ai        = last_result[CONST.RETURNS.AI])
+    
+    arg_res = agriculture.model(current_year = x, 
+                                io      = last_result[CONST.RETURNS.IO], 
+                                pop     = last_result[CONST.RETURNS.POP],
+                                ppolx   = last_result[CONST.RETURNS.PPOLX])
+    result = dict(cap_res.items() + 
+                   pop_res.items() +
+                   pol_res.items() +
+                   arg_res.items())
+    results.append(result)
+
+plt.plot(population_list)
