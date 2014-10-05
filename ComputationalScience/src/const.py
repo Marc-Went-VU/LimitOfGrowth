@@ -32,7 +32,7 @@ class _Initials(object):
         MTF = 12 * f.f34(self.LEI)
         FIE = (self.IOPCI - self.AIOPCI)/self.AIOPCI
         DCFS = 4*f.f41(FIE)*f.f39(self.DIOPCI)
-        DTF = DCFS * f.f36(self.LEI)
+        DTF = DCFS * f.f36(self.PLEI)
         return SOPC*f.f48(MTF/DTF -1) 
     @constant
     def FCFPCI(self):
