@@ -9,7 +9,11 @@ from models.agriculture import Agriculture
 from const import _Const
 CONST = _Const()
 
-
+def get_list_for(results, const):
+    res = {}
+    for key, value in results.iteritems():
+        res[key] = value[const]
+    return res
 start_year = 1900
 year_step = 1
 
@@ -57,10 +61,13 @@ for x in year_list:
                    arg_res.items())
     results.append(result)
 
-
-for key, value in sorted(population_list.items(), key=lambda x:x[1]):
+VAR = CONST.RETURNS.IO
+res = get_list_for(result_dict, VAR)
+for key, value in sorted(res.items(), key=lambda x:x[0]):
     print "%s - %s " %(key, value)
 
-plt.plot(*zip(*sorted(population_list.items(), key=lambda x:x[1])))
+plt.plot(*zip(*sorted(res.items(), key=lambda x:x[0])), label=VAR)
+
+plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1, ncol=2, borderaxespad=0.)
 #plt.plot(population_list.iteritems())
 plt.show()

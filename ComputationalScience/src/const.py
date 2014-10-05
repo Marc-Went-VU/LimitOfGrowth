@@ -114,28 +114,28 @@ class _Initials(object):
 class _Returns(object):
     @constant
     def AI(self):
-        return "ai"
+        return "AI"
     @constant
     def F(self):
-        return "f"
+        return "F"
     @constant
     def FALM(self):
-        return "falm"
+        return "FALM"
     @constant
     def FIOAA(self):
-        return "fioaa"
+        return "FIOAA"
     @constant
     def IO(self):
-        return "io"
+        return "IO"
     @constant
     def POP(self):
-        return "pop"
+        return "POP"
     @constant
     def PPOLX(self):
-        return "ppolx"
+        return "PPOLX"
     @constant
     def SO(self):
-        return "so"
+        return "SO"
 class _Capital(object):
     @constant
     def YEAR(self):
