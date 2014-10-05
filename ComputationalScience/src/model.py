@@ -30,7 +30,7 @@ results = [init_result]
 result_dict = {}
 
 population_list = {}
-year_list = f.drange(CONST.START_YEAR, CONST.START_YEAR+CONST.YEAR_RANGE, CONST.YEAR_STEP_SIZE)
+year_list = f.drange(CONST.START_YEAR, CONST.START_YEAR+CONST.YEAR_RANGE+0.00001, CONST.YEAR_STEP_SIZE)
 for x in year_list:
     last_result = results[-1]
     result_dict[x] = last_result
@@ -61,7 +61,7 @@ for x in year_list:
                    arg_res.items())
     results.append(result)
 
-VAR = CONST.RETURNS.IO
+VAR = CONST.RETURNS.POP
 res = get_list_for(result_dict, VAR)
 for key, value in sorted(res.items(), key=lambda x:x[0]):
     print "%s - %s " %(key, value)
