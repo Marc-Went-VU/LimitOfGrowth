@@ -31,8 +31,7 @@ class Population:
         DCFS = 4*f.f41(FIE)*f.f39(self.DIOPC)
         DTF = DCFS*f.f36(self.PLE)
         FPC = F/self.POP
-        f26 = f.f26(self.POP)
-        LMC = 1 - f.f27(IOPC)* f26
+        LMC = 1 - f.f27(IOPC)* f.f26(self.POP)
                 
         LE = 28. * f.f25(self.EHSPC) * f.f20(FPC/230) * f.f29(ppolx) * LMC
         MTF = 12*f.f34(LE)
@@ -42,7 +41,9 @@ class Population:
         TF = min(MTF, MTF*(1-FCE)+DTF*FCE)
         B = 0.21*self.POP*TF/30
         HSAPC = f.f21(SOPC)
-        D = self.POP/LE if LE != 0 else 0 
+        if LE == 0:
+            LE = 0
+        D = self.POP/LE# if LE != 0 else 0 
         
         #RGP = (dPOP/POP)*1000 # (B-D)/POP*1000
         

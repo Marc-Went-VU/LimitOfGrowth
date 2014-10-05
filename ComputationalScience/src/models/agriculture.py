@@ -45,7 +45,7 @@ class Agriculture:
         LFDR = f.f122(ppolx)
         LFRT = f.f125(FALM)
         LER = self.AL / (6000*f.f114(LY/600)) 
-        LRUI = max(0, (pop/f.f117(io/pop) - self.UIL)/10)
+        LRUI = max(0, (pop*f.f117(io/pop) - self.UIL)/10)
         LDR = FIALD * TAI / DCPH
         
         dAL = LDR - LRUI - LER
@@ -54,7 +54,6 @@ class Agriculture:
         dLFERT = (600 - self.LFERT)/LFRT - self.LFERT*LFDR
         dAI = (CAI - self.AI)/2
         dPFR = (FR - self.PFR)/2
-        
         
         self.AL += (dAL * year_step)
         self.PAL += (dPAL * year_step)
