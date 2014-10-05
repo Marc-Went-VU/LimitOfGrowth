@@ -53,32 +53,3 @@ class Capital:
         ret[CONST.RETURNS.IO] = IO
         ret[CONST.RETURNS.SO] = SO
         return ret
-
-    def run_model(self, 
-                  start_year = CONST.START_YEAR, 
-                  year_range = CONST.YEAR_RANGE, 
-                  year_step = CONST.YEAR_STEP_SIZE,
-                  fioaa = CONST.FIOAA):
-        
-        results = []
-        results.append(self.extended_captial_model(current_year = start_year, 
-                                                 fioaa = fioaa, 
-                                                 pop = CONST.INITIAL.POPI,
-                                                 nr = CONST.INITIAL.NRI, 
-                                                 ic = CONST.INITIAL.ICI, 
-                                                 sc = CONST.INITIAL.NRI,
-                                                 year_step = year_step,
-                                                 nri = CONST.INITIAL.NRI))
-        
-        for x in f.drange(start_year+1, start_year+year_range, year_step):
-            last_result = results[-1]
-            results.append(self.extended_captial_model(current_year = x, 
-                                                     fioaa = fioaa,
-                                                     pop = CONST.INITIAL.POPI,
-                                                     nr = last_result[CONST.CAPITAL.NR], 
-                                                     ic = last_result[CONST.CAPITAL.IC], 
-                                                     sc = last_result[CONST.CAPITAL.SC],
-                                                     year_step = year_step)
-                           )
-        return results
-        

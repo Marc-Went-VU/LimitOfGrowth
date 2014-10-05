@@ -136,86 +136,10 @@ class _Returns(object):
     @constant
     def SO(self):
         return "SO"
-class _Capital(object):
-    @constant
-    def YEAR(self):
-        return 0
-    @constant
-    def NR(self):
-        return 1
-    @constant
-    def IC(self):
-        return  2
-    @constant
-    def SC(self):
-        return 3
-class _Population(object):
-    @constant
-    def YEAR(self):
-        return 0
-    @constant
-    def POP(self):
-        return 1
-    @constant
-    def EHSPC(self):
-        return  2
-    @constant
-    def AIOPC(self):
-        return 3
-    @constant
-    def DIOPC(self):
-        return 4
-    @constant
-    def FCFPC(self):
-        return 5
-    @constant
-    def PLE(self):
-        return 6
-    @constant
-    def DELAYED_dDIOPC(self):
-        return 7
-    @constant
-    def DELAYED_dFCFPC(self):
-        return 8
-    @constant
-    def DELAYED_dPLE(self):
-        return 9
-class _Agriculture(object):
-    @constant
-    def YEAR(self):
-        return 0
-    @constant
-    def IO(self):
-        return 1
-    @constant
-    def POP(self):
-        return  2
-    @constant
-    def PPOLX(self):
-        return 3
-    @constant
-    def AL(self):
-        return 4
-    @constant
-    def PAL(self):
-        return 5
-    @constant
-    def UIL(self):
-        return 6
-    @constant
-    def LFERT(self):
-        return 7
-    @constant
-    def AI(self):
-        return 8
-    @constant
-    def PFR(self):
-        return 9
+
 class _Const(object):
     def __init__(self):
-        self.capital = _Capital()
-        self.population = _Population()
-        self.agriculture = _Agriculture()
+
         self.initial = _Initials()
         self.returns = _Returns()
     @constant
@@ -227,16 +151,6 @@ class _Const(object):
     @constant
     def YEAR_STEP_SIZE(self):
         return 1
-    
-    @constant
-    def CAPITAL(self):
-        return self.capital
-    @constant
-    def POPULATION(self):
-        return self.population
-    @constant
-    def AGRICULTURE(self):
-        return self.agriculture
     
     @constant
     def RETURNS(self):
