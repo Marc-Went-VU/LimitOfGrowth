@@ -40,8 +40,8 @@ for x in year_list:
                             pop         = last_result[CONST.RETURNS.POP])
     
     pop_res = population.model(current_year = x,
-                               io       = last_result[CONST.RETURNS.FIOAA],
-                               so       = last_result[CONST.RETURNS.POP],
+                               io       = last_result[CONST.RETURNS.IO],
+                               so       = last_result[CONST.RETURNS.SO],
                                F        = last_result[CONST.RETURNS.F],
                                ppolx    = last_result[CONST.RETURNS.PPOLX])
     
