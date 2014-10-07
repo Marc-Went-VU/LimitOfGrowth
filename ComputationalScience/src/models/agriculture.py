@@ -26,26 +26,26 @@ class Agriculture:
                  current_year, 
                  io, pop, ppolx,
                  year_step = CONST.YEAR_STEP_SIZE):
-        
+        IFPC = f.f90(io/pop)
+        DCPH = f.f97(self.PAL/3.2*10**9)
+        LFDR = f.f122(ppolx)
         FALM = f.f126(self.PFR)
+        LFRT = f.f125(FALM)
+        LRUI = max(0, (pop*f.f117(io/pop) - self.UIL)/10)
+
         AIPH = self.AI * (1 - FALM) / self.AL
         LY = self.LFERT * f.f102(AIPH) * f.f106(io)
         F = LY * self.AL * 0.63
         FPC = F / pop
-        IFPC = f.f90(io/pop)
         FIOAA = f.f94(FPC/IFPC)
         TAI = FIOAA * io
-        DCPH = f.f97(self.PAL/3.2*10**9)
-        MPLD = LY / (DCPH * 0.7)
         MPAI = 2 * LY * f.f111(AIPH) / f.f102(AIPH)
+        MPLD = LY / (DCPH * 0.7)
         FIALD = f.f108(MPLD / MPAI)
         
         CAI = TAI * (1 - FIALD)
         FR = FPC / 230
-        LFDR = f.f122(ppolx)
-        LFRT = f.f125(FALM)
         LER = self.AL / (6000*f.f114(LY/600)) 
-        LRUI = max(0, (pop*f.f117(io/pop) - self.UIL)/10)
         LDR = FIALD * TAI / DCPH
         
         dAL = LDR - LRUI - LER

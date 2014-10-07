@@ -102,7 +102,7 @@ class _Initials(object):
         return self.PPOLI/(1.36*10**8)
     @constant
     def SCI(self): #Service Capital Initial (dollar)
-        return 1.4*10**11
+        return 1.44*10**11
     @constant
     def SOI(self):
         cuf = 1

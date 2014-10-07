@@ -21,9 +21,9 @@ class Pollution:
                   year_step= CONST.YEAR_STEP_SIZE
                   ):        
         
-        PPGIO = 0.02 * pop * f.f132(io/pop)
         PPGAO = 0.001 * ai * (1 - falm)
-        PPGR = PPGIO * PPGAO
+        PPGIO = 0.02 * pop * f.f132(io/pop)
+        PPGR = PPGIO + PPGAO
         PPOLX = self.PPOL/(1.36*10**8)
         AHL = 1.5 * f.f145(PPOLX)
         PPASR = self.PPOL/(1.4 * AHL)
