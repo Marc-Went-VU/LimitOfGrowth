@@ -61,7 +61,7 @@ for x in year_list:
                    arg_res.items())
     results.append(result)
 
-VAR = CONST.RETURNS.POP
+VAR = CONST.RETURNS.PPOLX
 res = get_list_for(result_dict, VAR)
 for key, value in sorted(res.items(), key=lambda x:x[0]):
     print "%s - %s " %(key, value)

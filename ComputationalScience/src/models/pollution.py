@@ -9,7 +9,8 @@ class Pollution:
         self.PPOL = CONST.INITIAL.PPOLI
         self.PPAPR = CONST.INITIAL.PPGRI
         
-        self.delaydPPAPR = {self.start_year: CONST.INITIAL.PPGRI}
+        self.delayedPPARPnew = {}
+        self.delayedPPARPold = {}
  
     def initial_result(self):
         ret = {}
@@ -28,15 +29,23 @@ class Pollution:
         AHL = 1.5 * f.f145(PPOLX)
         PPASR = self.PPOL/(1.4 * AHL)
         
-        self.delaydPPAPR[current_year + 20/year_step] = PPGR
+        if len(self.delayedPPARPold) == 0:
+            self.delayedPPARPnew = {1: PPGR, 2: PPGR, 3: PPGR}
+        else:
+            delayPerStage = 20/3
+            
+            self.delayedPPARPnew[1] = self.delayedPPARPold[1] + year_step * (PPGR - self.delayedPPARPold[1])                    / delayPerStage;
+            self.delayedPPARPnew[2] = self.delayedPPARPold[2] + year_step * (self.delayedPPARPold[1] - self.delayedPPARPold[2]) / delayPerStage;
+            self.delayedPPARPnew[3] = self.delayedPPARPold[3] + year_step * (self.delayedPPARPold[2] - self.delayedPPARPold[3]) / delayPerStage;
+
+        self.delayedPPARPold = self.delayedPPARPnew
         
         dPPOL = self.PPAPR - PPASR
-        dPPAPR = f.get_unprecise_index(self.delaydPPAPR, current_year)
+        dPPAPR = self.delayedPPARPnew[3]
         
         self.PPOL += (dPPOL * year_step)
         self.PPAPR += (dPPAPR * year_step)
-        
-        
+                
         ret = {}
         ret[CONST.RETURNS.PPOLX] = PPOLX
         return ret
