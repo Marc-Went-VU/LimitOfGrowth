@@ -34,7 +34,7 @@ Despite its flaws, the World3 model is suitable enough to illustrate the validit
 
 No single country is responsible for the problems on its own or able to take appropriate actions. Measures on a world wide scale are necessary, which are very difficult to coordinate. The history of the ozone hole and acid rain shows that global coordination is not impossible. In this report, we will not elaborate on this subject.
 
-The report and the model have received many critics, mainly by people who did not understand the main message. Changing the model does not change the conclusion: unlimited growth cannot continue. Economists often address that the used assumptions in the models are very different from the axiom's economists often use. Also, the tone of the report is pessimistic. The Club of Rome was wrongfully called the zero growth movement, although the conclusion of the report does not to deny this. The Club of Rome state that we need to strive for sustainable growth, instead of continuing the direction we are currently heading to. Poor countries are able to grow to improve the welfare level in these countries.
+The report and the model have received many critics, mainly by people who did not understand the main message. Changing the model does not change the conclusion: unlimited growth cannot continue. Economists often address that the used assumptions in the models are very different from the axiom's economists often use. Also, the tone of the report is pessimistic. The Club of Rome was wrongfully called the zero growth movement, although the conclusion of the report does not to deny this. In the report there is a dedicated chapter about the conditions to obtain sustainable growth and what growth in a global equilibrium means. Within these conditions, company's can rise and fall, local population can grow and decline. Technological developments can improve the average standard of living.
 
 \section*{Standard run of the model}
 
@@ -59,6 +59,7 @@ A full analysis of the parameters of model, the influences of the submodels and 
 	\item What is the influence of the size of the population on the use of natural resources?
 	\item Can the collapse of population indeed be ICOR and FIOAC increased by 10\% and ALIC decreased by 10\%.
 	\item What is the influence of the amount of available natural resources on the other submodels?
+	\item Do the conditions in the Limits to Growth to obtain sustainable growth indeed lead to a sustainable equilibrium?
 \end{itemize}
 
 Additionally, we will investigate behaviour of the model we find remarkable while varying parameters.
@@ -67,22 +68,28 @@ Additionally, we will investigate behaviour of the model we find remarkable whil
 
 The World3 model is an example of a model in the System dynamics formulation, which is based on feedback loops. Figure \ref{world3} An overview of the model and the interactions between the submodels. We included this to give an impression of the size of the model, not for details.
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{./plaatjes/world3.png}
-\caption{Diagram of the world model from \cite{forresterworld}}
-\label{standard-run}
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{./plaatjes/world3.png}
+%\caption{Diagram of the world model from \cite{forresterworld}}
+%\label{standard-run}
+%\end{figure}
 
 The complete model consists of more than 150 differential equations. The original model is formulated in a special language called DYNAMO.
 
-We came very close to implement the model as described in \cite{thissen1978investigations} in Python. Here, the capital and resource subsectors are merged. However, eventually we did not succeed.
+We came very close to implement the model in the formulation as described in \cite{thissen1978investigations} in Python. In Thissen's formulation, the capital and resource subsectors are merged. However, eventually we did not succeed.
 
 *Sad story*
 
-A particular problem is the use of a function from DYNAMO called DELAY3. This function represents a third-order linear delay, but we were not able to find an explanation we understand.
+A particular problem is the use of a function from DYNAMO called DELAY3. This function represents a third-order linear delay, but we were not able to find an explanation we could understand.
+
+To come up with a working model, we probably need to understand and implement the original model formulation from \cite{forresterworld} instead of the formulation from \cite{thissen1978investigations}. DYNAMO is an old language, with a special feature. The equations of the model can be written down in any order. The compiler does reorder the equations automatically. We expect this to be a major challenge to implement this in a sequential language as Python.
+
+\subsection*{Simplified resource and capital model}
 
 We were able to implement the simplified resource and capital model from \cite{thissen1978investigations}.
+
+\textcolor{red}{Picture of the standard run in the simplified model and differences with the standard standard run}
 
 \section*{Results and analysis}
 
@@ -92,9 +99,11 @@ Illustration of the delay of collapse when natural resources are increased. One 
 
 Today, the Club of Rome still exists. The views of the Club of Rome are still broadly correct: unlimited consumption and growth on a planet with limited resources cannot go on forever.
 
+Believe in advance of technique that we can solve problems in future
+
 \section*{Conclusion}
 
-Believe in advance of technique that we can solve problems in future
+
 
 \bibliographystyle{abbrvnat}
 \nocite{*}
