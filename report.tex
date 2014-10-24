@@ -49,7 +49,9 @@ Figure \ref{standard-run} shows the behaviour of the standard model, i.e. of the
 
 Note that the scale on the y-axis is missing. The model does not give predictions, but a direction. The numbers are very likely to be inaccurate and are thus not of great importance.
 
-\textcolor{red}{Story about what we see}
+The model shown in Figure 1 shows that around 2040 society will collapse. This happens shortly after the industrial output drops. This manifestation of these catastrophes is an indication that not only the resources are depleted but also the pollution of this world is rising to a record high.
+
+The rising pollution also has a big effect on the life expectancy of the population. Figure 1 shows a correlation around 2045, where pollution is at the largest peak and the life expectancy drops rapidly. Since the turn of a rising life expectancy to a dropping one, the population growth has stagnated, which results in a decay of the human population.
 
 \section*{Research questions}
 
@@ -68,20 +70,26 @@ Additionally, we will investigate behaviour of the model we find remarkable whil
 
 The World3 model is an example of a model in the System dynamics formulation, which is based on feedback loops. Figure \ref{world3} An overview of the model and the interactions between the submodels. We included this to give an impression of the size of the model, not for details.
 
-%\begin{figure}
-%\centering
-%\includegraphics[width=\textwidth]{./plaatjes/world3.png}
-%\caption{Diagram of the world model from \cite{forresterworld}}
-%\label{standard-run}
-%\end{figure}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{./plaatjes/model.png}
+\caption{Diagram of the world model from cite{forresterworld}}
+\label{world3}
+\end{figure}
 
 The complete model consists of more than 150 differential equations. The original model is formulated in a special language called DYNAMO.
 
 We came very close to implement the model in the formulation as described in \cite{thissen1978investigations} in Python. In Thissen's formulation, the capital and resource subsectors are merged. However, eventually we did not succeed.
 
-*Sad story*
+First of all we implemented the simplified capital model, \cite{thissen1978investigations} suggested that  differences neither population, agriculture or pollution has any major effect on the capital. This simplified model therefore uses constants as an alternative.
+
+This model shows a proper approximation of the population prediction with the original World3 model.
+
+Because we thought this model was too easy we started to replace this simplified capital model with the extended capital model, this model relies on the three other sub models – population, agriculture and pollution.
 
 A particular problem is the use of a function from DYNAMO called DELAY3. This function represents a third-order linear delay, but we were not able to find an explanation we could understand.
+
+Therefore it cannot be determined why the model does not behave the way it should.
 
 To come up with a working model, we probably need to understand and implement the original model formulation from \cite{forresterworld} instead of the formulation from \cite{thissen1978investigations}. DYNAMO is an old language, with a special feature. The equations of the model can be written down in any order. The compiler does reorder the equations automatically. We expect this to be a major challenge to implement this in a sequential language as Python.
 
@@ -102,8 +110,6 @@ Today, the Club of Rome still exists. The views of the Club of Rome are still br
 Believe in advance of technique that we can solve problems in future
 
 \section*{Conclusion}
-
-
 
 \bibliographystyle{abbrvnat}
 \nocite{*}
