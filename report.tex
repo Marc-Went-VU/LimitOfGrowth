@@ -5,6 +5,8 @@
 \usepackage[pdftex]{graphicx}
 \usepackage{natbib}
 \usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{array}
 
 \title{Study on the Club of Rome's World3 Model}
 \subtitle{Project Introduction to Computational Science 2014\\
@@ -31,13 +33,13 @@ It has to be noted that World3 model is far from perfect and was merely a first 
 
 Despite its flaws, the World3 model is suitable enough to illustrate the validity of the Club of Rome's hypotheses. The model is an example that it is not necessary to have a perfect model to give an clear insight in problems. The model does not give a prediction, but is sketching alternative scenario's for humanity. For taking appropriate measures to prevent a scenario becoming true, the model and its validity need to be studied and improved extensively. The World3 model shows what possibly can go wrong. \cite{vermeulen1976parameter} conclude that, while in \emph{Limits to Growth} very severe measures are suggested for every subsector in the world model in order to avoid the catastrophic population collapse of the standard run, that by combining three changes of 10\% each in the parameters ICOR, FIOAC, ALIC, the collapse of population can also be avoided. They speculate that the real world has so many variables and is so flexible that the correct small pressures on the correct parameters could cause desirable outcomes for the world's evolution.
 
-Despite the large amount of publicity Limits to Growth has received at publication, concerned governments continued to go everything they could to stimulate economic growth and no start was made for a transition to a sustainable growth. This was mainly to reduce unemployment. \cite{voorbijdegrenzen} believes that the main contribution of the report is that it led to a continued interest in future of humanity and the start of many discussions.
+Limits to Growth received a large amount of publicity at publication. Concerned governments nevertheless continued to go everything they could to stimulate economic growth and no start was made for a transition to a sustainable growth. This was mainly to reduce unemployment. \cite{voorbijdegrenzen} believes that the main contribution of the report is that it led to a continued interest in future of humanity and the start of many discussions.
 
 The difficulty of the problem is that no single country is responsible on its own or able to take appropriate actions. Measures on a world wide scale are necessary, which are very difficult to coordinate. The history of the ozone hole and acid rain shows that global coordination is not impossible. In this report, we will not elaborate on the subject of international cooperation.
 
 \subsubsection*{Critics on the World3 model and Limits to Growth}
 
-The report and the model have received many critics. However, changing the model does not change the conclusion: unlimited growth cannot continue. Some people argued that the equation $y(t) = ae^{rt}$ is also sufficient to show that sustainable growth cannot continue.
+The report and the model have received many critics. However, the conclusion remains strong: unlimited growth cannot continue. Some people argued that the equation $y(t) = ae^{rt}$ is also sufficient to show that sustainable growth cannot continue and that the model thus overcomplicates. Others criticize the model for its oversimplification in the aggregation of variables.
 
 Economists often address that the used assumptions in the models are very different from the axiom's economists often use. Also, the tone of the report is pessimistic. The Club of Rome was wrongfully called the zero growth movement, although the conclusion of the report does not to deny this qualification. In the report there is a dedicated chapter about the conditions to obtain sustainable growth and what growth in a global equilibrium means. Within these conditions, company's can rise and fall, local population can grow and decline. Technological developments can improve the average standard of living.
 
@@ -82,13 +84,21 @@ The World3 model is an example of a model in the System dynamics formulation, wh
 \label{world3}
 \end{figure}
 
-The complete model consists of more than 150 differential equations. The original model is formulated in a special language called DYNAMO. The model has since then be ported by the original authors to STELLA and extended to include human welfare and footprint indicators. Many others have created ports of the DYNAMO formulation to other languages, such as Java (\url{http://www.world3simulator.org/}), Vensim (\url{http://models.metasd.com/tag/world3/}) and JavaScript (\url{http://bit-player.org/extras/limits/}).
+The complete model consists of more than 150 differential equations and variables. The original model is formulated in a special language called DYNAMO. The model has since then be ported by the original authors to STELLA and extended to include human welfare and footprint indicators. Many others have created ports of the DYNAMO formulation to other languages, such as Java (\url{http://www.world3simulator.org/}), Vensim (\url{http://models.metasd.com/tag/world3/}) and JavaScript (\url{http://bit-player.org/extras/limits/}).
 
 As we wanted to learn how to implement such large model, we tried to implement the World3 in the formulation as described in \cite{thissen1978investigations} in Python. In Thissen's formulation, the capital and resource subsectors are merged. However, we did not succeed. First, we will discuss our problems and use one of the ported versions of others for an analysis of the model.
 
-First of all we implemented a simplified capital model. \cite{thissen1978investigations} suggested that differences neither population, agriculture or pollution has any major effect on the capital. This simplified model therefore uses constants for input of these submodels as an alternative. This model shows a proper approximation of the population prediction with the original World3 model.
+Firstly, we implemented a simplified capital model. \cite{thissen1978investigations} suggested that differences neither population, agriculture or pollution has any major effect on the capital. This simplified model therefore uses constants for input of these submodels as an alternative. This model shows a proper approximation of the population prediction with the original World3 model.
 
-As we thought this model was too easy we started to replace this simplified capital model with the extended capital model. This model relies on the three other submodels – population, agriculture and pollution. These were also implemented.
+As we thought this model was too easy we started to replace this simplified capital model with the extended capital model. This model relies on the three other submodels – population, agriculture and pollution. These were also implemented. The interactions between these submodels can be seen in figure \ref{interactions}. He omitted the job sector from World3, as this model proved to influence the model behaviour only under a few, very specific circumstances.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{./plaatjes/submodel-interactions.png}
+\caption{Interactions between the four main submodels
+of World3}
+\label{interactions}
+\end{figure}
 
 \subsection*{Simplified resource and capital model}
 
@@ -100,15 +110,48 @@ We were able to implement the simplified resource and capital model from \cite{t
 
 Our implementation of Will Thissen's model does not give correct results.
 
-A particular problem we encountered at the implementation is the use of a function from DYNAMO called DELAY3. This function represents a third-order linear delay. Although this function is implemented in and documented for Vensim, we were not able to find an explanation we could understand. Therefore it cannot be determined why the model does not behave the way it should.
+A particular problem we encountered at the implementation is the use of a function from DYNAMO called DELAY3. This function represents a third-order linear delay. Although this function is implemented in and documented for Vensim, we were not able to find an explanation we could understand.
 
-To come up with a working model, we probably need to understand and implement the original model formulation from \cite{forresterworld} instead of the formulation from \cite{thissen1978investigations}. DYNAMO is an old language, with the special feature that equations can be written down in any order. The compiler does reorder the equations automatically. We expect this to be very challenging to implement this in a sequential language as Python.  After implementing the model in the sequential way, we discovered that the author of the JavaScript port also failed at implementing the model sequentially (\cite{blogpost}). Eventually, he mimicked the automatic ordering of equations of the DYNAMO compiler in JavaScript, but we are not fluent in JavaScript enough to study his approach.
+To come up with a working model, we probably need to understand and implement the original model formulation from \cite{forresterworld} instead of the formulation from \cite{thissen1978investigations}. DYNAMO is an old language, with the special feature that equations can be written down in any order. The compiler does reorder the equations automatically. We expect this to be very challenging to implement this in a sequential language as Python.  After implementing the model in the sequential way, we discovered that the author of the JavaScript port also failed at implementing the model sequentially (\cite{blogpost}). Eventually, he mimicked the automatic ordering of equations of the DYNAMO compiler in JavaScript. Although his source code can be studied, we are not fluent in JavaScript enough to understand his methods.
 
 Unfortunately, we do not have access to the newer STELLA formulation.
 
-\subsubsection*{Steps taken to find the mistake}
+\subsubsection*{Approaches taken to find the mistake}
 
-The model was of course checked for typing errors. We corrected some, but this didn't lead to a working model.
+First, the model was thoroughly checked for typing errors. We corrected two or three, but this didn't lead to a working model.
+
+Secondly, different interpretations for the DELAY3 function were implemented. As we think this function represents some kind of moving average, it is our hypothesis that replacing shouldn't have a large impact on the model. This didn't improve our models.
+
+Thirdly, we modified the JavaScript port \cite{blogpost} to print the dependent variables for each submodel from figure \ref{interactions} to study the differences in the change of variables after one iteration. In the first iteration, the submodels only depend on the initial values, of which we assume implemented them correctly. If only one of these values would be wrong, this would be due a mistake in the specific submodel of the variable. However, as can be seen in table \ref{value-differences}, all variables differ. This leaves us clueless.
+
+After one iteration the numbers in the JavaScript version differ in several orders of magnitude from the initial values, which are directly copied from the JavaScript source. Our values seem more probable, but our model is wrong and the JavaScript model isn't. Again, this could be due our unfamiliarity with the JavaScript code, but printing is done fairly straightforward by applying the \texttt{console.log} function on an array.
+
+\begin{table}
+\centering
+\begin{longtable}{|m{1.3cm}|m{3cm}|m{1.4cm}|c|c|m{2cm}|}
+\hline
+\textbf{Variable} & \textbf{Meaning} & \textbf{Initial value} & \textbf{Python} & \textbf{JavaScript} & \textbf{Units}\\
+\hline
+POP & Population & 1.6e10 & 1.56e10 & 2.32e10 & amount\\
+\hline
+IO & Industrial output & 7.90e11 & 6.65e11 & 1.00e-3 & dollars per person-year\\
+\hline
+SO & Service output & 1.00e13 & 1.00e13 & 0.215 & dollars per year\\
+\hline
+F & Food & - & 1.72e12 & 7.48e12 & kilograms per year\\
+\hline
+FIOAA & Fraction of industrial output allocated to agriculture & - & 0.247 & 0.040 & -\\
+\hline
+AI & Agricultural inputs & - & 7.63e16 & 3.99e-6 & dollars per year\\
+\hline
+FALM & Fraction of inputs allocated to land maintenance & 0 & 0.040 & 0.052 & -\\
+\hline
+PPOLX & Index of persistent pollution & 1.36e8 (in 1970) & 0.184 & 7.69e-16 & dimensionless\\
+\hline
+\end{longtable}
+\caption{Values of inter-submodel variables in the standard model after one time step, with $dt$ = 0.5}
+\label{value-differences}
+\end{table}
 
 \section*{Results and analysis}
 
@@ -118,11 +161,11 @@ Illustration of the delay of collapse when natural resources are increased. One 
 
 Today, the Club of Rome still exists. The focus in its early years was on the nature of the global problems and on new pathways for world development. Currently, the Club of Rome defines and communicates the elements of a new economy, which produces real wealth and well-being, without degrading natural resources and and with providing meaningful jobs and sufficient income for all people.
 
-Believe in advance of technique that we can solve problems in future
-
 \section*{Conclusion}
 
-The World3 model and Limits to Growth discusses interesting and urgent problems. A full analysis of the model has proven to be enough work for a PhD thesis. The model than this assignment 
+The World3 model and Limits to Growth discusses interesting and urgent problems. A full analysis of the model has proven to be enough work for a PhD thesis, i.e. more time than we have for this assignment. We haven't succeed to implement the World3 model in Python.
+
+As for which ``dynamic tendencies'', as it is called in the Limits of Growth, will indicate how the future is going to be, is not yet clear. We are currently at the peak of wellfare predicted by the model. Some scientists are optimistic about the ability to deal with the issues before the world collapses, while others are not. The consequences of an overshoot are already observable, such as in global warming.
 
 \bibliographystyle{abbrvnat}
 \nocite{*}
