@@ -1,6 +1,4 @@
-from plot import Plot
 import matplotlib.pyplot as plt
-import collections
 import func as f
 from models.capital_extended import Capital
 from models.population import Population
