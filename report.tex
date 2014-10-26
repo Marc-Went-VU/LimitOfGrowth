@@ -93,7 +93,7 @@ Additionally, we will investigate behaviour of the model we find remarkable whil
 
 The World3 model is an example of a model in the System dynamics formulation, which is based on feedback loops. Figure \ref{world3} An overview of the model and the interactions between the submodels. We included this figure to give an impression of the size of the model, not for details.
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{./plaatjes/model.jpg}
 \caption{Diagram of the world model from \cite{forresterworld}}
@@ -130,11 +130,11 @@ As we thought this model was too easy we started to replace this simplified capi
 
 \subsection*{Simplified resource and capital model}
 
-We have successfully implemented the simplified resource and capital model from \cite{thissen1978investigations} without problems. See .
+We have successfully implemented the simplified resource and capital model from \cite{thissen1978investigations} without problems. See the results for a comparison between the standard run and the simplified model.
 
-\subsection*{Implementation of Wil Thissen's full formulation}
+\subsection*{Implementation of Thissen's full formulation}
 
-As will be shown in the results section, our implementation of Wil Thissen's model also does not give correct results.
+As will be shown in the results section, our implementation of Thissen's model also does not give correct results.
 
 A particular problem we encountered at the implementation is the use of a function from DYNAMO called DELAY3. This function represents a third-order linear delay. Although this function is implemented in and documented for Vensim, we were not able to find an explanation we could understand.
 
@@ -179,20 +179,39 @@ PPOLX & Index of persistent pollution & 1.36e8 (in 1970) & 0.184 & 7.69e-16 & di
 \label{value-differences}
 \end{table}
 
-\section*{Results and analysis}
+Finally, at writing the report, we discovered that our simplified model didn't work correctly either. We compared an old version of the simplified model with the current version. It turned out that the old version was correct, but the current version turned out to be false. Our first guess was that the mistake was in the code, but by comparing the code line by line it showed no mistakes, math wise.
 
-\begin{itemize}
-	\item Can the collapse of population indeed be prevented by increasing the variables ICOR (industrial capital-output ratio) and FIOAC (fraction of inputs allocated to consumption) by 10\% and decreasing ALIC (average lifetime of industrial capital) by 10\%?
-	\item Do the conditions in the Limits to Growth to obtain sustainable growth indeed lead to a sustainable equilibrium?
-\end{itemize}
+As we ran short on time we decided to cancel our hunt for the mistake, but our final guess would be that somehow certain variables are not set properly or calculated properly, mainly the initial values. Some initial values need to be calculated nonetheless and are therefore error prone. But by disabling the calculation and making it a constant it showed no significant changes. Therefore the variable saving within the model class should be looked into. This is very time consuming and because of it, skipped.
+
+\section*{Results and analysis}
 
 \subsection*{Simplified capital and resources model}
 
-As stated earlier, this model uses constant input for population, agriculture and pollution on the whole time horizon from 1900 until 2100. When compared to figure \ref{standard-run}, the model seems to be a proper approximation of the population prediction with the original World3 model.
+As stated earlier, this model uses constant input for population, agriculture and pollution on the whole time horizon from 1900 until 2100. Figure \ref{simplified-model} shows that the simplified model closely resembles the corresponding variables in the JavaScript model. Note that scale on the y-axis does not matter. The numerical values correspondent. The graph can be shifted by choosing $FIOAA$ (fraction of inputs allocated to agriculture) differently.
+
+\begin{figure}
+\centering
+\begin{minipage}{0.49\textwidth}
+\includegraphics[width=\textwidth]{./plaatjes/simplified-python.png}
+\end{minipage}
+\begin{minipage}{0.49\textwidth}
+\includegraphics[width=\textwidth]{./plaatjes/simplified-javascript.png}
+\end{minipage}
+\caption{Left: simplified model in Python with $FIOAA = 0.05$ and the variables in the simplified model in the JavaScript model. \
+Legend left: \textcolor{red}{service capital} , \textcolor[HTML]{0b850b}{industrial capital}, \textcolor{blue}{nonrenewable resources}. Legend right: \textcolor[HTML]{41439a}{industrial capital}, \textcolor[HTML]{84F78F}{industrial output}, \textcolor[HTML]{F4C9CF}{nonrenewable resources}, \textcolor[HTML]{a43bc1}{service capital}}
+\label{simplified-model}
+\end{figure}
 
 \subsection*{Our Python implementation}
 
-\textcolor{red}{Picture of the standard run in the simplified model and differences with the standard standard run}
+Figure \ref{fail} shows that our implementation of the full model is incorrect. The graph should be equal to the right graph of figure \ref{simplified-model}.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{./plaatjes/fail.png}
+\caption{Incorrect implementation of Thissen's full model}
+\label{fail}
+\end{figure}
 
 \subsection*{JavaScript model}
 
@@ -228,6 +247,8 @@ The second picture displays the behaviour of the model when the time step is cha
 
 In the third picture, the population is kept fixed from 1975. In the report Limits to Growth, this is done by setting the death rate equal to the birth rate. We did not succeed in doing this. Based on figure \ref{world3}, the birth and death rate only have influence on the other equations by the total population. This is why we kept the population from 1975 fixed. The resulting model has the same form as in the Limits to Growth report, but seems shifted to the right. The axis in Limits to Growth is not very clear. It demonstrates that only keeping the population at a fixed level is not enough for an equilibrium, because of a large increase in industrial output, food production and service output (not shown in our picture). Keeping the population fixed does not have any influence on the the depletion of natural resources.
 
+For the fourth picture, the measures suggested by \cite{vermeulen1976parameter} are implemented. This shows the decrease in population is only delayed to after 2100 and not prevented.
+
 The last two pictures in figure \ref{composition} represent the behaviour with the fraction of consumed output 0.51 and 0.52. Changing this parameter by such small amount causes a major difference in. Unfortunately, the model doesn't support the human welfare index of newer versions of the World3 model.
 
 \begin{figure}
@@ -240,7 +261,10 @@ The last two pictures in figure \ref{composition} represent the behaviour with t
 \end{minipage}
 \begin{minipage}{0.49\textwidth}
 \includegraphics[width=\textwidth]{./plaatjes/fixed-population.png}
-\end{minipage}\\
+\end{minipage}
+\begin{minipage}{0.49\textwidth}
+\includegraphics[width=\textwidth]{./plaatjes/three-vars.png}
+\end{minipage}
 \begin{minipage}{0.49\textwidth}
 \includegraphics[width=\textwidth]{./plaatjes/output-consumed-0,51.png}
 \end{minipage}
@@ -259,7 +283,7 @@ Today, the Club of Rome still exists. The focus in its early years was on the na
 
 \section*{Conclusion}
 
-The World3 model and Limits to Growth discusses interesting and urgent problems. A full analysis of the model has proven to be enough work for a PhD thesis, i.e. more time than we have for this assignment. We haven't succeed to implement the World3 model in Python.
+The World3 model and Limits to Growth discusses interesting and urgent problems. A full analysis of the model has proven to be enough work for a PhD thesis, i.e. more time than we have for this assignment. Unfortunately, we haven't succeed to implement the World3 model in Python. However, we learned a lot at implementing and investigating the model.
 
 As for which ``dynamic tendencies'', as it is called in the Limits to Growth, will indicate how the future is going to be, is not yet clear. We are currently at the peak of welfare predicted by the model. Some scientists are optimistic about the ability to deal with the issues before the world collapses, while others are not. The consequences of an overshoot are already observable, such as in global warming.
 
