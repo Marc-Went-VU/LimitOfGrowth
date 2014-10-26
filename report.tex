@@ -82,7 +82,7 @@ A full analysis of the parameters of model, the influences of the submodels and 
 
 \begin{itemize}
 	\item What is the influence of the size of the population on the use of natural resources?
-	\item Can the collapse of population indeed be prevented by increasing the variables ICOR (industrial capital-output ratio) and FIOAC (fraction of inputs allocated to consumption) by 10\% and decreasing ALIC (average lifetime of industrial capital) by 10\%?
+	\item Can the collapse of population indeed be prevented by increasing the variables ICOR (industrial capital-output ratio) and FIOAC (fraction of inputs allocated to consumption) by 10\% and decreasing ALIC (average lifetime of industrial capital) by 10\% in 1975?
 	\item What is the influence of the amount of available natural resources?
 	\item Do the conditions in the Limits to Growth to obtain sustainable growth indeed lead to a sustainable equilibrium?
 \end{itemize}
@@ -102,11 +102,19 @@ The World3 model is an example of a model in the System dynamics formulation, wh
 
 The complete model consists of more than 150 differential equations and variables. The original model is formulated in a special programming language called DYNAMO. The model has since then be ported by the original authors to another language, called STELLA, and extended to include human welfare and footprint indicators. Many others have created ports of the DYNAMO formulation to other languages, such as Java (\url{http://www.world3simulator.org/}), Vensim (\url{http://models.metasd.com/tag/world3/}) and JavaScript (\url{http://bit-player.org/extras/limits/}).
 
-As we wanted to learn how to implement such large model and see how the model really worked, we tried to implement the World3 in the formulation as described in \cite{thissen1978investigations} in Python. In Thissen's formulation, the capital and resource subsectors are merged. However, we did not succeed. First, we will discuss our problems and use one of the ported versions of others for an analysis of the model.
+As we wanted to learn how to implement such large model and see how the model really worked, we tried to implement the World3 in the formulation as described in \cite{thissen1978investigations} in Python.
 
-Firstly, we implemented a simplified capital model. \cite{thissen1978investigations} suggested that differences in neither population, agriculture or pollution has any major effect on the capital. This simplified model therefore uses constants for input of these submodels as an alternative.
+For solving the differential equations, we used Euler's method (first order). Let $\mathbf{X}(t)$ represent the vector with all state variables at time $t$, with $t=0$ the initial state, and $\mathbf{f}(\mathbf{X}, t)$ the function expressing the rate of change for each state variable at time $t$, given the state $\mathbf{X}$. Then
+\begin{equation}
+\mathbf{X}(t) = \mathbf{X(0)} + \int_0^t \mathbf{f}(\mathbf{X}, \tau) d\tau
+\end{equation}
+can be approximated by the recursion
+\begin{equation}
+\mathbf{X}(t) = \mathbf{X}(t-dt) + \mathbf{f}(\mathbf{X}(t-dt), t-dt) dt,
+\end{equation}
+with $dt$ the time step that should be taken sufficiently small. The standard value for $dt$ used in the World3 model is $dt=0.5$. In the World3 model, $t=0$ represents the year 1900 and $t=1$ 1901.
 
-As we thought this model was too easy we started to replace this simplified capital model with the extended capital model. This model relies on the three other submodels – population, agriculture and pollution. These were also implemented. The interactions between these submodels can be seen in figure \ref{interactions}. He omitted the job sector from World3, as this model proved to influence the model behaviour only under a few, very specific circumstances.
+The World3 model consists of different submodels. In Thissen's formulation, the capital and resource subsectors are merged. The other models are the population, agriculture and pollution submodels. The interactions between these submodels can be seen in figure \ref{interactions}. Thissen omitted the job sector from World3, as this model proved to influence the model behaviour only under a few, very specific circumstances. Also, in his formulation three coupling variables between the models are expressed in total numbers instead of numbers per capita. These are the industrial output, service output and food production. In this way, the submodels could be investigated without having the population submodel. He chose to write down the World3's population model without age distribution, one of the three \cite{meadows1974dynamics} provides.
 
 \begin{figure}
 \centering
@@ -116,13 +124,17 @@ of World3, without job sector (\cite{thissen1978investigations})}
 \label{interactions}
 \end{figure}
 
+Firstly, we implemented a simplified capital model. Thissen suggested that differences in neither population, agriculture or pollution has any major effect on the capital. This simplified model therefore uses constants for input of these submodels as an alternative.
+
+As we thought this model was too easy we started to replace this simplified capital and resources model with the full model. This model relies on the three other submodels, which we needed to implement together. However, we did not succeed. We will discuss our problems and use one of the ported versions of others for an analysis of the model.
+
 \subsection*{Simplified resource and capital model}
 
-We were able to implement the simplified resource and capital model from \cite{thissen1978investigations} without problems. This model will be discussed in the results section.
+We thought we had implemented the simplified resource and capital model from \cite{thissen1978investigations} without problems. However, a recomparisation between the simplified model and the standard run shortly before the deadline of this report, showed that this model is also flawed, as is the full model. We will present this in our results section.
 
-\subsection*{Implementation of Will Thissen's full formulation}
+\subsection*{Implementation of Wil Thissen's full formulation}
 
-As will be shown in the results section, our implementation of Will Thissen's model does not give correct results.
+As will be shown in the results section, our implementation of Wil Thissen's model also does not give correct results.
 
 A particular problem we encountered at the implementation is the use of a function from DYNAMO called DELAY3. This function represents a third-order linear delay. Although this function is implemented in and documented for Vensim, we were not able to find an explanation we could understand.
 
@@ -138,7 +150,7 @@ Secondly, different interpretations for the DELAY3 function were implemented. As
 
 Thirdly, we modified the JavaScript port \cite{blogpost} to print the dependent variables for each submodel from figure \ref{interactions} to study the differences in the change of variables after one iteration. In the first iteration, the submodels only depend on the initial values, of which we assume implemented them correctly. If only one of these values would be wrong, this would be due a mistake in the specific submodel of the variable. However, as can be seen in table \ref{value-differences}, all variables differ. This leaves us clueless.
 
-After one iteration the numbers in the JavaScript version differ in several orders of magnitude from the initial values, which are directly copied from the JavaScript source. Our values seem more probable, but our model is wrong and the JavaScript model isn't. Again, this could be due our unfamiliarity with the JavaScript code, but printing is done by provided functions of the code.
+After one iteration the numbers in the JavaScript version differ in several orders of magnitude from the initial values, which are directly copied from the JavaScript source. Our values seem more probable, but our model is wrong and the JavaScript model isn't. Correcting for Thissen's warning that some values in the original model are per capita, does not lead to correct numbers. Again, this could be due our unfamiliarity with the JavaScript code, but printing is done by provided functions of the code.
 
 \begin{table}
 \centering
@@ -170,11 +182,8 @@ PPOLX & Index of persistent pollution & 1.36e8 (in 1970) & 0.184 & 7.69e-16 & di
 \section*{Results and analysis}
 
 \begin{itemize}
-	\item What is the influence of the size of the population on the use of natural resources?
 	\item Can the collapse of population indeed be prevented by increasing the variables ICOR (industrial capital-output ratio) and FIOAC (fraction of inputs allocated to consumption) by 10\% and decreasing ALIC (average lifetime of industrial capital) by 10\%?
-	\item What is the influence of the amount of available natural resources?
 	\item Do the conditions in the Limits to Growth to obtain sustainable growth indeed lead to a sustainable equilibrium?
-	\item What causes the drastic increase of life expectancy around the Second World War?
 \end{itemize}
 
 \subsection*{Simplified capital and resources model}
@@ -213,9 +222,13 @@ To answer the research questions posed earlier, we modified the JavaScript port 
 
 When figure \ref{resources-2} is compared to figure \ref{standard-run}, it can be seen that the decrease of the population is delayed when natural resources are increased. Industrial output attains a higher maximum and pollution rises drastically. One of the examples of the use of incorrect data was the amount of available natural resources. New techniques have made it, for example, possible to extract oil deeper from the earth. However, as we will see, this has no influence on the main conclusion of the report.
 
-Figure \ref{composition} is a composition of several figures. First, it is shown that when the fraction of output consumed is lowered from the standard 0.43 to 0.01, industrial output grows enormously fast and population declines around 1960 because of pollution. the second picture of the compilation displays the behaviour of the model when the time step is changed to 2. This reminds us of the unstability of the discrete Lotka Volterra model in the lectures.
+Figure \ref{composition} is a composition of several figures. First, it is shown that when the fraction of output consumed is lowered from the standard 0.43 to 0.01, industrial output grows enormously fast and population declines around 1960 because of pollution.
 
-The second two pictures in figure \ref{composition} display the behaviour with the fraction of consumed output 0.51 and 0.52. Changing this parameter by such small amount causes a major difference in. Unfortunately, the model doesn't support the human welfare index of newer versions of the World3 model. Finally, 
+The second picture displays the behaviour of the model when the time step is changed to 2. This reminds us of the instability of the discrete Lotka Volterra model from the lectures.
+
+In the third picture, the population is kept fixed from 1975. In the report Limits to Growth, this is done by setting the death rate equal to the birth rate. We did not succeed in doing this. Based on figure \ref{world3}, the birth and death rate only have influence on the other equations by the total population. This is why we kept the population from 1975 fixed. The resulting model has the same form as in the Limits to Growth report, but seems shifted to the right. The axis in Limits to Growth is not very clear. It demonstrates that only keeping the population at a fixed level is not enough for an equilibrium, because of a large increase in industrial output, food production and service output (not shown in our picture). Keeping the population fixed does not have any influence on the the depletion of natural resources.
+
+The last two pictures in figure \ref{composition} represent the behaviour with the fraction of consumed output 0.51 and 0.52. Changing this parameter by such small amount causes a major difference in. Unfortunately, the model doesn't support the human welfare index of newer versions of the World3 model.
 
 \begin{figure}
 \centering
@@ -226,12 +239,15 @@ The second two pictures in figure \ref{composition} display the behaviour with t
 \includegraphics[width=\textwidth]{./plaatjes/timestep-2.png}
 \end{minipage}
 \begin{minipage}{0.49\textwidth}
+\includegraphics[width=\textwidth]{./plaatjes/fixed-population.png}
+\end{minipage}\\
+\begin{minipage}{0.49\textwidth}
 \includegraphics[width=\textwidth]{./plaatjes/output-consumed-0,51.png}
 \end{minipage}
 \begin{minipage}{0.49\textwidth}
 \includegraphics[width=\textwidth]{./plaatjes/output-consumed-0,52.png}
 \end{minipage}
-\caption{Left to right, upper to lower: standard run with the fraction of output consumed 0.01, standard run with $dt=2$, standard run with fraction of output 0.51 and standard run with fraction of output 0.52}
+\caption{Left to right, upper to lower: standard run with the fraction of output consumed 0.01, standard run with $dt=2$, standard model with fixed population from 1975, standard run with fraction of output 0.51 and standard run with fraction of output 0.52}
 \label{composition}
 \end{figure}
 
@@ -239,13 +255,13 @@ To investigate the phenomenon that caused the drastic increase in life expectanc
 
 \section*{The Club of Rome today}
 
-Today, the Club of Rome still exists. The focus in its early years was on the nature of the global problems and on new pathways for world development. Currently, the Club of Rome defines and communicates the elements of a new economy, which produces real wealth and well-being, without degrading natural resources and and with providing meaningful jobs and sufficient income for all people.
+Today, the Club of Rome still exists. The focus in its early years was on the nature of the global problems and on new pathways for world development. Currently, the Club of Rome defines and communicates the elements of a new economy, which produces real wealth and well-being, without degrading natural resources and and with providing meaningful jobs and sufficient income for all people. Updates of the report are published every 10 years and confirm the urgency of the problems we are facing.
 
 \section*{Conclusion}
 
 The World3 model and Limits to Growth discusses interesting and urgent problems. A full analysis of the model has proven to be enough work for a PhD thesis, i.e. more time than we have for this assignment. We haven't succeed to implement the World3 model in Python.
 
-As for which ``dynamic tendencies'', as it is called in the Limits of Growth, will indicate how the future is going to be, is not yet clear. We are currently at the peak of welfare predicted by the model. Some scientists are optimistic about the ability to deal with the issues before the world collapses, while others are not. The consequences of an overshoot are already observable, such as in global warming.
+As for which ``dynamic tendencies'', as it is called in the Limits to Growth, will indicate how the future is going to be, is not yet clear. We are currently at the peak of welfare predicted by the model. Some scientists are optimistic about the ability to deal with the issues before the world collapses, while others are not. The consequences of an overshoot are already observable, such as in global warming.
 
 \bibliographystyle{abbrvnat}
 \nocite{*}
