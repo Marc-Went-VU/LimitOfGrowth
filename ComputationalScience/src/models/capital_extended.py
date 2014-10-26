@@ -15,6 +15,11 @@ class Capital:
         ret = {}
         ret[CONST.RETURNS.IO] = CONST.INITIAL.IOI
         ret[CONST.RETURNS.SO] = CONST.INITIAL.SOI
+        
+        
+        ret[CONST.RETURNS.IC] = CONST.INITIAL.ICI
+        ret[CONST.RETURNS.NR] = CONST.INITIAL.NRI
+        ret[CONST.RETURNS.SC] = CONST.INITIAL.SCI
         return ret
     
     def model(self,  
@@ -52,4 +57,8 @@ class Capital:
         ret = {}
         ret[CONST.RETURNS.IO] = IO
         ret[CONST.RETURNS.SO] = SO
+        
+        ret[CONST.RETURNS.IC] = self.IC
+        ret[CONST.RETURNS.NR] = self.NR
+        ret[CONST.RETURNS.SC] = self.SC
         return ret

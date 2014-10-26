@@ -136,6 +136,16 @@ class _Returns(object):
     @constant
     def SO(self):
         return "SO"
+    
+    @constant
+    def IC(self):
+        return "IC"
+    @constant
+    def NR(self):
+        return "NR"
+    @constant
+    def SC(self):
+        return "SC"
 
 class _Const(object):
     def __init__(self):
