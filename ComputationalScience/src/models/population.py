@@ -13,10 +13,13 @@ class Population:
         self.FCFPC  = CONST.INITIAL.FCFPCI
         self.PLE    = CONST.INITIAL.PLEI
         
-        self.delaydDIOPC={self.start_year: CONST.INITIAL.DIOPCI}
-        self.delaydFCFPC={self.start_year: CONST.INITIAL.FCFPCI}
-        self.delaydPLE={self.start_year: CONST.INITIAL.PLEI}
-
+        self.delayedDIOPCold={}
+        self.delayedFCFPCold={}
+        self.delayedPLEold={}
+        self.delayedDIOPCnew={}
+        self.delayedFCFPCnew={}
+        self.delayedPLEnew={}
+        
     def initial_result(self):
         ret = {}
         ret[CONST.RETURNS.POP] = CONST.INITIAL.POPI
@@ -35,7 +38,7 @@ class Population:
         LE = 28. * f.f25(self.EHSPC) * f.f20(FPC/230) * f.f29(ppolx) * LMC
         D = self.POP/LE
 
-        #Calcualtion of Birth rate
+        #Calculation of Birth rate
         FIE = (IOPC - self.AIOPC)/self.AIOPC
         DCFS = 4*f.f41(FIE)*f.f39(self.DIOPC)
         DTF = DCFS*f.f36(self.PLE)
@@ -49,13 +52,42 @@ class Population:
         dEHSPC = (HSAPC - self.EHSPC)/20
         dAIOPC = (IOPC - self.AIOPC)/3
         
-        self.delaydDIOPC[current_year + 20/year_step] = IOPC
-        self.delaydFCFPC[current_year + 20/year_step] = FCAPC
-        self.delaydPLE[current_year + 20/year_step] = LE
+        if len(self.delayedDIOPCold) == 0:
+            self.delayedDIOPCnew = {1: IOPC, 2: IOPC, 3: IOPC}
+        else:
+            delayPerStage = 20/3
+            
+            self.delayedDIOPCnew[1] = self.delayedDIOPCold[1] + year_step * (IOPC - self.delayedDIOPCold[1])                    / delayPerStage;
+            self.delayedDIOPCnew[2] = self.delayedDIOPCold[2] + year_step * (self.delayedDIOPCold[1] - self.delayedDIOPCold[2]) / delayPerStage;
+            self.delayedDIOPCnew[3] = self.delayedDIOPCold[3] + year_step * (self.delayedDIOPCold[2] - self.delayedDIOPCold[3]) / delayPerStage;
+
+        self.delayedDIOPCold = self.delayedDIOPCnew        
+ 
+        if len(self.delayedFCFPCold) == 0:
+            self.delayedFCFPCnew = {1: FCAPC, 2: FCAPC, 3: FCAPC}
+        else:
+            delayPerStage = 20/3
+            
+            self.delayedFCFPCnew[1] = self.delayedFCFPCold[1] + year_step * (FCAPC - self.delayedFCFPCold[1])                    / delayPerStage;
+            self.delayedFCFPCnew[2] = self.delayedFCFPCold[2] + year_step * (self.delayedFCFPCold[1] - self.delayedFCFPCold[2]) / delayPerStage;
+            self.delayedFCFPCnew[3] = self.delayedFCFPCold[3] + year_step * (self.delayedFCFPCold[2] - self.delayedFCFPCold[3]) / delayPerStage;
+
+        self.delayedFCFPCold = self.delayedFCFPCnew
         
-        dDIOPC = f.get_unprecise_index(self.delaydDIOPC, current_year)
-        dFCFPC = f.get_unprecise_index(self.delaydFCFPC, current_year)
-        dPLE = f.get_unprecise_index(self.delaydPLE, current_year)
+        if len(self.delayedPLEold) == 0:
+            self.delayedPLEnew = {1: LE, 2: LE, 3: LE}
+        else:
+            delayPerStage = 20/3
+            
+            self.delayedPLEnew[1] = self.delayedPLEold[1] + year_step * (LE - self.delayedPLEold[1])                    / delayPerStage;
+            self.delayedPLEnew[2] = self.delayedPLEold[2] + year_step * (self.delayedPLEold[1] - self.delayedPLEold[2]) / delayPerStage;
+            self.delayedPLEnew[3] = self.delayedPLEold[3] + year_step * (self.delayedPLEold[2] - self.delayedPLEold[3]) / delayPerStage;
+
+        self.delayedPLEold = self.delayedPLEnew
+        
+        dDIOPC = self.delayedDIOPCnew[3]
+        dFCFPC = self.delayedFCFPCnew[3]
+        dPLE = self.delayedPLEnew[3]
         
         self.POP    += (dPOP * year_step)
         self.EHSPC  += (dEHSPC * year_step)

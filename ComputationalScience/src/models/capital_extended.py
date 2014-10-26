@@ -31,12 +31,12 @@ class Capital:
         
         NRFR = self.NR / CONST.INITIAL.NRI
         FCAOR = f.f135(NRFR)
-        IO = self.IC* CUF * (1 - FCAOR) / ICOR
+        IO = self.IC * CUF * (1 - FCAOR) / ICOR
         IOPC = IO / pop
         ISOPC = f.f61(IOPC)
         PCRUM = f.f132(IOPC)
         SO = self.SC * CUF / SCOR
-        SOPC = SO/ pop
+        SOPC = SO / pop
         FIOAS = f.f64(IOPC)
         U = 1 - FIOAC - fioaa
         FIOAI = U - FIOAS
