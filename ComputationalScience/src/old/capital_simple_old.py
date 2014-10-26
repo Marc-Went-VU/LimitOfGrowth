@@ -1,15 +1,10 @@
 import func as f
-from const import _Const
+from const_old import _Const
         
 CONST = _Const()
 class Capital:
-    def __init__(self, start_year):
+    def __init__(self):
         self = self
-        self.start_year = start_year
-        
-        self.NR = CONST.INITIAL.NRI
-        self.IC = CONST.INITIAL.ICI
-        self.SC = CONST.INITIAL.NRI
     def run_model(self, 
                   start_year = CONST.START_YEAR, 
                   year_range = CONST.YEAR_RANGE, 
@@ -38,37 +33,31 @@ class Capital:
                                                      year_step = year_step,
                                                      nri = nri))
         return results
-    def initial_result(self):
-        ret = {}
-        ret[CONST.RETURNS.IO] = CONST.INITIAL.IOI
         
-        ret[CONST.RETURNS.IC] = CONST.INITIAL.ICI
-        ret[CONST.RETURNS.NR] = CONST.INITIAL.NRI
-        ret[CONST.RETURNS.SC] = CONST.INITIAL.SCI
-        return ret    
-    def model(self,  
+    def simple_captial_model(self,  
                              current_year, 
                              fioaa, 
-                             year_step = CONST.YEAR_STEP_SIZE):
+                             nr, 
+                             ic, 
+                             sc,
+                             year_step = CONST.YEAR_STEP_SIZE,
+                             nri = CONST.INITIAL.NRI):
         a132 = 0.0053
         a61 = 1.67
         
-        fcaor = f.f135(self.NR / CONST.INITIAL.NRI)
-        io = self.IC * (1 - fcaor) / 3
-        fioas = f.f64(self.SC/(a61 * io))
+        fcaor = f.f135(nr/nri)
+        io = ic * (1 - fcaor) / 3
+        fioas = f.f64(sc/(a61 * io))
         
-        dIC = (0.57 - fioas - fioaa) * io - self.IC/14
-        dSC = fioas * io - self.SC/20 
+        dIC = (0.57 - fioas - fioaa) * io - ic/14
+        dSC = fioas * io - sc/20 
         dNR = -1 * a132 * io
         
-        self.NR += (dNR * year_step)
-        self.IC += (dIC * year_step)
-        self.SC += (dSC * year_step)
-        ret = {}
-        ret[CONST.RETURNS.IO] = io
-        
-        ret[CONST.RETURNS.IC] = self.IC
-        ret[CONST.RETURNS.NR] = self.NR
-        ret[CONST.RETURNS.SC] = self.SC
+        nr += (dNR * year_step)
+        ic += (dIC * year_step)
+        sc += (dSC * year_step)
+        ret = [current_year]
+        ret.insert(CONST.CAPITAL.NR, nr)
+        ret.insert(CONST.CAPITAL.IC, ic)
+        ret.insert(CONST.CAPITAL.SC, sc)
         return ret
-

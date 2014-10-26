@@ -61,13 +61,18 @@ for x in year_list:
                    arg_res.items())
     results.append(result)
 
-VAR = CONST.RETURNS.PPOLX
-res = get_list_for(result_dict, VAR)
-for key, value in sorted(res.items(), key=lambda x:x[0]):
-    print "%s - %s " %(key, value)
+# VAR = CONST.RETURNS.PPOLX
+# res = get_list_for(result_dict, VAR)
+# for key, value in sorted(res.items(), key=lambda x:x[0]):
+#     print "%s - %s " %(key, value)
 
-plt.plot(*zip(*sorted(res.items(), key=lambda x:x[0])), label=VAR)
+ret = CONST.RETURNS
+ret_list = [ret.NR]
+for x in range(len(ret_list)):
+    plt.subplot(len(ret_list), 1, x)
+    res = get_list_for(result_dict, ret_list[x])
+    plt.plot(*zip(*sorted(res.items(), key=lambda x:x[0])), label=ret_list[x])
 
-plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1, ncol=2, borderaxespad=0.)
+    plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=1, ncol=2, borderaxespad=0.)
 #plt.plot(population_list.iteritems())
 plt.show()
