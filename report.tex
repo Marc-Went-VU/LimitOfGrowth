@@ -72,7 +72,7 @@ Figure \ref{standard-run} shows the behaviour of the standard model, i.e. of the
 
 Note that the scale on the y-axis is missing. This is because the model does not give predictions, but a direction. The numbers are very likely to be inaccurate and are thus not of great importance.
 
-The model shown in figure \ref{standard-run} shows that around 2040 society will collapse. This happens shortly after the industrial output drops. This manifestation of these catastrophes is an indication that not only the resources are depleted but also the pollution of this world is rising to a record high.
+The model shown in Figure \ref{standard-run} shows that around 2040 society will collapse. This happens shortly after the industrial output drops. This manifestation of these catastrophes is an indication that not only the resources are depleted but also the pollution of this world is rising to a record high.
 
 The rising pollution also has a big effect on the life expectancy of the population. Figure 1 shows a correlation around 2045, where pollution is at the largest peak and the life expectancy drops rapidly. Since the turn of a rising life expectancy to a dropping one, the population growth has stagnated, which results in a decay of the human population.
 
@@ -114,7 +114,7 @@ can be approximated by the recursion
 \end{equation}
 with $dt$ the time step that should be taken sufficiently small. The standard value for $dt$ used in the World3 model is $dt=0.5$. In the World3 model, $t=0$ represents the year 1900 and $t=1$ 1901.
 
-The World3 model consists of different submodels. In Thissen's formulation, the capital and resource subsectors are merged. The other models are the population, agriculture and pollution submodels. The interactions between these submodels can be seen in figure \ref{interactions}. Thissen omitted the job sector from World3, as this model proved to influence the model behaviour only under a few, very specific circumstances. Also, in his formulation three coupling variables between the models are expressed in total numbers instead of numbers per capita. These are the industrial output, service output and food production. In this way, the submodels could be investigated without having the population submodel. He chose to write down the World3's population model without age distribution, one of the three \cite{meadows1974dynamics} provides.
+The World3 model consists of different submodels. In Thissen's formulation, the capital and resource subsectors are merged. The other models are the population, agriculture and pollution submodels. The interactions between these submodels can be seen in Figure \ref{interactions}. Thissen omitted the job sector from World3, as this model proved to influence the model behaviour only under a few, very specific circumstances. Also, in his formulation three coupling variables between the models are expressed in total numbers instead of numbers per capita. These are the industrial output, service output and food production. In this way, the submodels could be investigated without having the population submodel. He chose to write down the World3's population model without age distribution, one of the three \cite{meadows1974dynamics} provides.
 
 \begin{figure}
 \centering
@@ -148,12 +148,10 @@ First, the model was thoroughly checked for typing errors. We corrected two or t
 
 Secondly, different interpretations for the DELAY3 function were implemented. As we think this function represents some kind of moving average, it is our hypothesis that replacing shouldn't have a large impact on the model. This didn't improve our models.
 
-Thirdly, we modified the JavaScript port \cite{blogpost} to print the dependent variables for each submodel from figure \ref{interactions} to study the differences in the change of variables after one iteration. In the first iteration, the submodels only depend on the initial values, of which we assume implemented them correctly. If only one of these values would be wrong, this would be due a mistake in the specific submodel of the variable. However, as can be seen in table \ref{value-differences}, all variables differ. This leaves us clueless.
+Thirdly, we modified the JavaScript port \cite{blogpost} to print the dependent variables for each submodel from Figure \ref{interactions} to study the differences in the change of variables after one iteration. In the first iteration, the submodels only depend on the initial values, of which we assume implemented them correctly. If only one of these values would be wrong, this would be due a mistake in the specific submodel of the variable. However, as can be seen in Table \ref{value-differences}, all variables differ. This leaves us clueless.
 
 After one iteration the numbers in the JavaScript version differ in several orders of magnitude from the initial values, which are directly copied from the JavaScript source. Our values seem more probable, but our model is wrong and the JavaScript model isn't. Correcting for Thissen's warning that some values in the original model are per capita, does not lead to correct numbers. Again, this could be due our unfamiliarity with the JavaScript code, but printing is done by provided functions of the code.
 
-\begin{table}
-\centering
 \begin{longtable}{|m{1.3cm}|m{3cm}|m{1.2cm}|c|c|m{2cm}|}
 \hline
 \textbf{Variable} & \textbf{Meaning} & \textbf{Initial value} & \textbf{Python} & \textbf{JavaScript} & \textbf{Units}\\
@@ -174,10 +172,9 @@ FALM & Fraction of inputs allocated to land maintenance & 0 & 0.040 & 0.052 & -\
 \hline
 PPOLX & Index of persistent pollution & 1.36e8 (in 1970) & 0.184 & 7.69e-16 & dimensionless\\
 \hline
-\end{longtable}
 \caption{Values of inter-submodel variables in the standard model after one time step, with $dt$ = 0.5}
 \label{value-differences}
-\end{table}
+\end{longtable}
 
 Finally, at writing the report, we discovered that our simplified model didn't work correctly either. We compared an old version of the simplified model with the current version. It turned out that the old version was correct, but the current version turned out to be false. Our first guess was that the mistake was in the code, but by comparing the code line by line it showed no mistakes, math wise.
 
@@ -204,7 +201,7 @@ Legend left: \textcolor{red}{service capital} , \textcolor[HTML]{0b850b}{industr
 
 \subsection*{Our Python implementation}
 
-Figure \ref{fail} shows that our implementation of the full model is incorrect. The graph should be equal to the right graph of figure \ref{simplified-model}.
+Figure \ref{fail} shows that our implementation of the full model is incorrect. The graph should be equal to the right graph of Figure \ref{simplified-model}.
 
 \begin{figure}
 \centering
@@ -239,17 +236,17 @@ To answer the research questions posed earlier, we modified the JavaScript port 
 \label{resources-2}
 \end{figure}
 
-When figure \ref{resources-2} is compared to figure \ref{standard-run}, it can be seen that the decrease of the population is delayed when natural resources are increased. Industrial output attains a higher maximum and pollution rises drastically. One of the examples of the use of incorrect data was the amount of available natural resources. New techniques have made it, for example, possible to extract oil deeper from the earth. However, as we will see, this has no influence on the main conclusion of the report.
+When Figure \ref{resources-2} is compared to Figure \ref{standard-run}, it can be seen that the decrease of the population is delayed when natural resources are increased. Industrial output attains a higher maximum and pollution rises drastically. One of the examples of the use of incorrect data was the amount of available natural resources. New techniques have made it, for example, possible to extract oil deeper from the earth. However, as we will see, this has no influence on the main conclusion of the report.
 
 Figure \ref{composition} is a composition of several figures. First, it is shown that when the fraction of output consumed is lowered from the standard 0.43 to 0.01, industrial output grows enormously fast and population declines around 1960 because of pollution.
 
 The second picture displays the behaviour of the model when the time step is changed to 2. This reminds us of the instability of the discrete Lotka Volterra model from the lectures.
 
-In the third picture, the population is kept fixed from 1975. In the report Limits to Growth, this is done by setting the death rate equal to the birth rate. We did not succeed in doing this. Based on figure \ref{world3}, the birth and death rate only have influence on the other equations by the total population. This is why we kept the population from 1975 fixed. The resulting model has the same form as in the Limits to Growth report, but seems shifted to the right. The axis in Limits to Growth is not very clear. It demonstrates that only keeping the population at a fixed level is not enough for an equilibrium, because of a large increase in industrial output, food production and service output (not shown in our picture). Keeping the population fixed does not have any influence on the the depletion of natural resources.
+In the third picture, the population is kept fixed from 1975. In the report Limits to Growth, this is done by setting the death rate equal to the birth rate. We did not succeed in doing this. Based on Figure \ref{world3}, the birth and death rate only have influence on the other equations by the total population. This is why we kept the population from 1975 fixed. The resulting model has the same form as in the Limits to Growth report, but seems shifted to the right. The axis in Limits to Growth is not very clear. It demonstrates that only keeping the population at a fixed level is not enough for an equilibrium, because of a large increase in industrial output, food production and service output (not shown in our picture). Keeping the population fixed does not have any influence on the the depletion of natural resources.
 
 For the fourth picture, the measures suggested by \cite{vermeulen1976parameter} are implemented. This shows the decrease in population is only delayed to after 2100 and not prevented.
 
-The last two pictures in figure \ref{composition} represent the behaviour with the fraction of consumed output 0.51 and 0.52. Changing this parameter by such small amount causes a major difference in. Unfortunately, the model doesn't support the human welfare index of newer versions of the World3 model.
+The last two pictures in Figure \ref{composition} represent the behaviour with the fraction of consumed output 0.51 and 0.52. Changing this parameter by such small amount causes a major difference in. Unfortunately, the model doesn't support the human welfare index of newer versions of the World3 model.
 
 \begin{figure}
 \centering
