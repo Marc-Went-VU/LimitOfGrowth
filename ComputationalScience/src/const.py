@@ -46,7 +46,7 @@ class _Initials(object):
     def FIOAAI(self): #Service Capital Initial (dollar)
         IFPC = f.f90(self.IOI/self.POPI)
         FPC = self.FI / self.POPI
-        return 0.05#f.f94(FPC/IFPC)
+        return f.f94(FPC/IFPC)
     @constant
     def HSAPCI(self): #Combine formula for io from capital_simple and IOPC from population using the initial values
         return f.f21(self.SOI/self.POPI)
